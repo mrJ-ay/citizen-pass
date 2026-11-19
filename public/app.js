@@ -139,11 +139,12 @@ async function fetchExternalDossier(citizen) {
   pigstyRecord = null;
   if (!citizen) return;
 
-  // 1) ONE BANK 계좌 조회 (본인 로그인 토큰이 있을 때)
+  // 1) ONE BANK 계좌 조회 (본인 로그인 토큰이 있을 때, 4초 타임아웃)
   if (token && stateData.me && citizen.userId === stateData.me.userId) {
     try {
       const bankRes = await fetch(`${cfg.onebankUrl}/api/account/me`, {
         headers: { Authorization: `Bearer ${token}` },
+        signal: AbortSignal.timeout(4000),
       });
       if (bankRes.ok) {
         const bData = await bankRes.json();
@@ -152,9 +153,11 @@ async function fetchExternalDossier(citizen) {
     } catch {}
   }
 
-  // 2) PIGSTY 게시글/검열 기록 조회
+  // 2) PIGSTY 게시글/검열 기록 조회 (4초 타임아웃)
   try {
-    const pRes = await fetch(`${cfg.pigstyBackendUrl}/api/posts?include_censored=1`);
+    const pRes = await fetch(`${cfg.pigstyBackendUrl}/api/posts?include_censored=1`, {
+      signal: AbortSignal.timeout(4000),
+    });
     if (pRes.ok) {
       const posts = await pRes.json();
       if (Array.isArray(posts)) {
@@ -424,9 +427,13 @@ function renderDirectory(list) {
       if (!target) return;
       selectedCitizen = target;
       renderIdCard(selectedCitizen);
-      await fetchExternalDossier(selectedCitizen);
       renderDossier(selectedCitizen);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+      fetchExternalDossier(selectedCitizen).then(() => {
+        if (selectedCitizen && selectedCitizen.userId === target.userId) {
+          renderDossier(selectedCitizen);
+        }
+      });
     });
   });
 
@@ -467,10 +474,13 @@ async function loadOverview() {
       oneidBtn.textContent = 'ONEID 로그인 · 민증 발급';
       selectedCitizen = stateData.directory?.[0] || null;
     }
-    renderIdCard(stateData.me || selectedCitizen);
-    await fetchExternalDossier(stateData.me || selectedCitizen);
-    renderDossier(stateData.me || selectedCitizen);
+    const activeTarget = stateData.me || selectedCitizen;
+    renderIdCard(activeTarget);
+    renderDossier(activeTarget);
     renderDirectory(stateData.directory || []);
+    fetchExternalDossier(activeTarget).then(() => {
+      renderDossier(activeTarget);
+    });
   } catch (err) {
     console.error(err);
   }
@@ -480,8 +490,8 @@ oneidBtn.addEventListener('click', async () => {
   if (stateData.me) {
     selectedCitizen = stateData.me;
     renderIdCard(selectedCitizen);
-    await fetchExternalDossier(selectedCitizen);
     renderDossier(selectedCitizen);
+    fetchExternalDossier(selectedCitizen).then(() => renderDossier(selectedCitizen));
     return;
   }
   startOneIdLogin();
@@ -579,8 +589,8 @@ verifyForm.addEventListener('submit', async (e) => {
     `;
     selectedCitizen = c;
     renderIdCard(c);
-    await fetchExternalDossier(c);
     renderDossier(c);
+    fetchExternalDossier(c).then(() => renderDossier(c));
   } catch (err) {
     verifyResultBox.innerHTML = `<span style="color:#fca5a5;">❌ 조회 실패: ${escapeHtml(err.message)}</span>`;
   }
