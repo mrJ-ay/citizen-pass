@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CITIZEN PASS — ONEID 디지털 주민등록청</title>
+  <link rel="stylesheet" href="/style.css?v=1" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="crest">🪪</span>
+        <div>
+          <h1>CITIZEN PASS</h1>
+          <span class="sub">ATELIER J · ONEID 디지털 주민등록청</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <a href="https://assembly-lovat.vercel.app" target="_blank" rel="noopener" class="btn ghost">🏛️ AGORA 의회</a>
+        <a href="https://one-bank.onrender.com" target="_blank" rel="noopener" class="btn ghost">🏦 ONE BANK</a>
+        <a href="https://oneid-helpdesk.onrender.com" target="_blank" rel="noopener" class="btn ghost">🛡️ 고객센터</a>
+        <button type="button" id="oneidBtn" class="btn gold">ONEID 로그인 · 민증 발급</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO: MY HOLOGRAM CITIZEN ID CARD & ECOSYSTEM DOSSIER -->
+    <section class="hero-grid">
+      <div class="card id-stage-card">
+        <div class="card-head">
+          <div>
+            <span class="eyebrow">OFFICIAL DIGITAL IDENTITY CARD</span>
+            <h2>전자 주민등록증 (홀로그램 민증)</h2>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button type="button" id="copyCitizenNoBtn" class="btn small ghost" hidden>📋 민증번호 복사</button>
+            <button type="button" id="openCustomModalBtn" class="btn small gold" hidden>✨ 민증 커스텀</button>
+          </div>
+        </div>
+
+        <div id="idCardStage" class="id-card-stage">
+          <!-- Rendered by app.js -->
+        </div>
+        <p class="stage-hint">💡 카드 위에 마우스를 움직이면 3D 홀로그램 보안 필름이 반사됩니다.</p>
+      </div>
+
+      <!-- RIGHT: ECOSYSTEM REAL-TIME DOSSIER -->
+      <div class="card dossier-card">
+        <div class="card-head">
+          <div>
+            <span class="eyebrow">ONEID ECOSYSTEM DOSSIER</span>
+            <h2>생태계 통합 신원 · 활동 기록부</h2>
+          </div>
+          <span id="dossierStatusBadge" class="badge">실시간 연동</span>
+        </div>
+
+        <div id="dossierContent" class="dossier-content">
+          <!-- Rendered by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VERIFICATION SCANNER -->
+    <section class="card scanner-section">
+      <div class="card-head">
+        <div>
+          <span class="eyebrow">IDENTITY VERIFICATION SCANNER</span>
+          <h2>🔍 주민등록번호 · 시민 신분증 진위 확인 조회소</h2>
+        </div>
+      </div>
+      <form id="verifyForm" class="scanner-bar">
+        <input id="verifyInput" type="text" placeholder="주민등록번호(예: 260412-1...) 또는 시민 닉네임 / 아이디 입력" required />
+        <button type="submit" class="btn gold">신분증 진위 조회</button>
+      </form>
+      <div id="verifyResultBox" class="verify-result-box" hidden></div>
+    </section>
+
+    <!-- PUBLIC CITIZEN DIRECTORY -->
+    <section class="directory-section">
+      <div class="section-head">
+        <div>
+          <span class="eyebrow">REGISTERED CITIZENS REGISTRY</span>
+          <h2>공식 등재 시민 명부 (<span id="citizenCount">0</span>명)</h2>
+          <p>ONEID로 주민등록증을 발급받은 시민들의 공식 신분증과 의회·생태계 소속 현황입니다. 카드를 클릭하면 상세 신원을 조회합니다.</p>
+        </div>
+      </div>
+
+      <div id="directoryGrid" class="directory-grid">
+        <div class="empty-box">시민 명부를 불러오는 중...</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- CUSTOMIZE ID CARD MODAL -->
+  <div id="customModal" class="modal-backdrop" hidden>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>✨ 내 주민등록증 커스터마이징</h3>
+        <button type="button" id="closeCustomModalBtn" class="icon-close">×</button>
+      </div>
+      <form id="customForm" class="modal-form">
+        <label>
+          <span>홀로그램 보안 카드 테마</span>
+          <select id="themeColorSelect">
+            <option value="gold">👑 로열 골드 (Royal Sovereign Gold)</option>
+            <option value="cyber">💠 사이버 네온 블루 (Cyber Neon Blue)</option>
+            <option value="emerald">🟢 에메랄드 시티즌 (Emerald Authority)</option>
+            <option value="crimson">🔴 크림슨 엘리트 (Crimson Elite)</option>
+            <option value="obsidian">⚫ 옵시디언 블랙 (Obsidian Black VIP)</option>
+          </select>
+        </label>
+        <label>
+          <span>신분증 대표 엠블럼 이모지</span>
+          <select id="avatarEmojiSelect">
+            <option value="🪪">🪪 표준 신분증</option>
+            <option value="👑">👑 왕관 / 통치자</option>
+            <option value="🏛️">🏛️ 의회 입법자</option>
+            <option value="⚖️">⚖️ 법률가 / 심판관</option>
+            <option value="🏦">🏦 금융 거물</option>
+            <option value="🎙️">🎙️ PULSE 스트리머</option>
+            <option value="⚔️">⚔️ KEYWAR 투사</option>
+            <option value="🕶️">🕶️ 언더그라운드 요원</option>
+            <option value="📰">📰 언론인 / 편집장</option>
+          </select>
+        </label>
+        <label>
+          <span>공식 직함 / 칭호 (최대 28자)</span>
+          <input id="customTitleInput" type="text" maxlength="28" placeholder="예: 아텔리에 총괄의장 / PULSE 파트너 BJ" required />
+        </label>
+        <label>
+          <span>주민등록 주소지 (본적 / 거주 구역)</span>
+          <input id="domicileInput" type="text" maxlength="40" placeholder="예: 아텔리에 제1특별시 의사당로 1번지" required />
+        </label>
+        <label>
+          <span>신분증 서명 · 한줄 신조 (최대 80자)</span>
+          <input id="mottoInput" type="text" maxlength="80" placeholder="예: 자유와 질서 위에 세운 디지털 공화국" required />
+        </label>
+        <button type="submit" class="btn gold full">신분증 재발급 · 즉시 반영</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ADMIN BADGE GRANT MODAL -->
+  <div id="adminBadgeModal" class="modal-backdrop" hidden>
+    <div class="modal-box">
+      <div class="modal-head">
+        <h3>👑 총괄관리자 직권 — 국가 공인 훈장 · 직책 수여</h3>
+        <button type="button" id="closeAdminBadgeModalBtn" class="icon-close">×</button>
+      </div>
+      <form id="adminBadgeForm" class="modal-form">
+        <input type="hidden" id="adminTargetUserId" />
+        <label>
+          <span>대상 시민</span>
+          <input id="adminTargetName" type="text" disabled />
+        </label>
+        <label>
+          <span>수여할 국가 훈장 · 특별 직책 (비우면 회수)</span>
+          <input id="adminSpecialBadgeInput" type="text" maxlength="36" placeholder="예: 🏅 건국공로훈장 / ⚖️ 대법관 / 🛡️ 명예 보안관" />
+        </label>
+        <button type="submit" class="btn gold full">훈장 · 특별 직책 즉시 수여</button>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="/app.js?v=1"></script>
+</body>
+</html>

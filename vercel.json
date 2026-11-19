@@ -1,0 +1,13 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/index.js" }
+  ],
+  "headers": [
+    {
+      "source": "/(index.html|app.js|style.css)?",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, must-revalidate" }
+      ]
+    }
+  ]
+}

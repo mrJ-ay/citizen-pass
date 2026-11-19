@@ -1,0 +1,15 @@
+{
+  "name": "citizen-pass",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "CITIZEN PASS — ONEID 디지털 주민등록청 & 시민 신분증 조회 시스템",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "pg": "^8.13.1"
+  }
+}
