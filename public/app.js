@@ -472,15 +472,17 @@ async function loadOverview() {
       selectedCitizen = stateData.me;
     } else {
       oneidBtn.textContent = 'ONEID 로그인 · 민증 발급';
-      selectedCitizen = stateData.directory?.[0] || null;
+      selectedCitizen = null;
     }
     const activeTarget = stateData.me || selectedCitizen;
     renderIdCard(activeTarget);
     renderDossier(activeTarget);
     renderDirectory(stateData.directory || []);
-    fetchExternalDossier(activeTarget).then(() => {
-      renderDossier(activeTarget);
-    });
+    if (activeTarget) {
+      fetchExternalDossier(activeTarget).then(() => {
+        renderDossier(activeTarget);
+      });
+    }
   } catch (err) {
     console.error(err);
   }
