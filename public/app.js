@@ -104,6 +104,23 @@ deskTabs?.addEventListener('click', (e) => {
   switchDesk(btn.dataset.desk);
 });
 
+document.querySelectorAll('[data-quick-desk]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    switchDesk(btn.dataset.quickDesk);
+  });
+});
+
+document.querySelectorAll('[data-quick-scroll]').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.dataset.quickScroll;
+    if (targetId === 'verifyCoupleForm') switchDesk('couple');
+    if (targetId === 'verifyForm') switchDesk('citizen');
+    const el = document.getElementById(targetId);
+    el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    el?.querySelector('input')?.focus();
+  });
+});
+
 async function startOneIdLogin() {
   const verifier = base64Url(crypto.getRandomValues(new Uint8Array(32)));
   const state = base64Url(crypto.getRandomValues(new Uint8Array(24)));
@@ -525,8 +542,8 @@ function createSignaturePad(canvas) {
   let drawing = false;
   let hasDrawn = false;
 
-  ctx.strokeStyle = '#fda4af';
-  ctx.lineWidth = 2.2;
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 2.4;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
 

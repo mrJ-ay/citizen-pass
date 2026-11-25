@@ -1,17 +1,18 @@
 :root {
-  --bg: #070a13;
-  --panel: #0f1629;
-  --panel-2: #141e38;
-  --border: #243356;
-  --text: #f1f5f9;
-  --muted: #94a3b8;
-  --gold: #f59e0b;
-  --gold-light: #fcd34d;
-  --rose: #f43f5e;
-  --rose-light: #fda4af;
-  --blue: #3b82f6;
-  --emerald: #10b981;
-  --danger: #ef4444;
+  --gov-blue: #003764;
+  --gov-blue-2: #0055a5;
+  --gov-blue-light: #e8f1fb;
+  --gov-red: #d91c2b;
+  --bg: #f3f5f9;
+  --panel: #ffffff;
+  --panel-alt: #f8fafc;
+  --border: #d5dce6;
+  --border-strong: #b4c0d3;
+  --text: #111827;
+  --text-sub: #374151;
+  --muted: #6b7280;
+  --emerald: #047857;
+  --danger: #dc2626;
 }
 
 * {
@@ -21,140 +22,261 @@
 }
 
 body {
-  background: radial-gradient(circle at 20% 0%, #152244 0%, var(--bg) 60%);
+  background: var(--bg);
   color: var(--text);
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Pretendard', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
   min-height: 100vh;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
+/* 정부24 최상단 공식 누리집 안내 바 */
+.gov-masthead {
+  background: #1e293b;
+  color: #e2e8f0;
+  font-size: 12px;
+  border-bottom: 1px solid #0f172a;
+}
+
+.gov-masthead-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 7px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.gov-masthead strong {
+  color: #ffffff;
+}
+
+.gov-masthead-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.gov-masthead-links a {
+  color: #cbd5e1;
+  text-decoration: none;
+}
+
+.gov-masthead-links a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+.gov-masthead-links .sep {
+  color: #475569;
+}
+
+/* 정부24 메인 헤더 */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(7, 10, 19, 0.9);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+  border-bottom: 2px solid var(--gov-blue);
+  box-shadow: 0 3px 12px rgba(0, 55, 100, 0.07);
 }
 
 .topbar-inner {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 13px 20px;
+  padding: 14px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   flex-wrap: wrap;
 }
 
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 13px;
 }
 
-.brand .crest {
-  font-size: 28px;
+.gov-emblem {
+  background: linear-gradient(135deg, #003764 55%, #d91c2b 100%);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 17px;
+  padding: 8px 13px;
+  border-radius: 10px;
+  letter-spacing: -0.5px;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 3px 8px rgba(0, 55, 100, 0.22);
+}
+
+.gov-emblem span {
+  color: #fde047;
+  margin-left: 2px;
 }
 
 .brand h1 {
-  font-size: 19px;
-  letter-spacing: 1px;
+  font-size: 20px;
   font-weight: 800;
-  color: var(--gold-light);
+  color: var(--gov-blue);
+  letter-spacing: -0.4px;
 }
 
 .brand .sub {
-  font-size: 11.5px;
+  font-size: 12px;
   color: var(--muted);
 }
 
+/* 창구 탭 (정부24 GNB 탭) */
 .desk-tabs {
   display: flex;
-  gap: 8px;
-  background: rgba(15, 22, 41, 0.9);
+  gap: 6px;
+  background: #eef2f7;
   padding: 5px;
-  border-radius: 13px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   flex-wrap: wrap;
 }
 
 .desk-tab {
-  padding: 8px 16px;
-  border-radius: 9px;
+  padding: 9px 18px;
+  border-radius: 7px;
   border: none;
   background: transparent;
-  color: var(--muted);
-  font-size: 13px;
+  color: var(--text-sub);
+  font-size: 13.5px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.18s ease;
+  transition: all 0.16s ease;
 }
 
 .desk-tab:hover {
-  color: var(--text);
+  color: var(--gov-blue);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .desk-tab.active[data-desk="citizen"] {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #090d16;
+  background: var(--gov-blue);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 55, 100, 0.25);
 }
 
 .desk-tab.active[data-desk="couple"] {
-  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  background: #be123c;
   color: #ffffff;
+  box-shadow: 0 2px 6px rgba(190, 18, 60, 0.25);
 }
 
-.topbar-actions {
+/* 자주 찾는 민원 바 */
+.gov-quick-bar {
+  background: #e8eff8;
+  border-bottom: 1px solid #cdd9ea;
+}
+
+.gov-quick-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.quick-title {
+  font-size: 12.5px;
+  font-weight: 800;
+  color: var(--gov-blue);
+}
+
+.quick-chips {
+  display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
+.quick-chip {
+  background: #ffffff;
+  border: 1px solid #b9cae2;
+  color: var(--gov-blue);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 99px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-chip:hover {
+  background: var(--gov-blue);
+  color: #ffffff;
+  border-color: var(--gov-blue);
+}
+
+.quick-hours {
+  font-size: 12px;
+  color: #047857;
+  font-weight: 700;
+}
+
+/* 버튼 */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 9px 15px;
-  border-radius: 10px;
+  padding: 9px 16px;
+  border-radius: 7px;
   font-size: 13px;
   font-weight: 700;
-  border: 1px solid var(--border);
-  background: var(--panel-2);
+  border: 1px solid var(--border-strong);
+  background: #ffffff;
   color: var(--text);
   cursor: pointer;
   text-decoration: none;
-  transition: all 0.18s ease;
+  transition: all 0.15s ease;
 }
 
 .btn:hover {
-  border-color: #47629e;
-  transform: translateY(-1px);
+  border-color: var(--gov-blue-2);
+  color: var(--gov-blue-2);
 }
 
+.btn.gov-primary,
 .btn.gold {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #090d16;
-  border-color: #fbbf24;
+  background: var(--gov-blue);
+  color: #ffffff;
+  border-color: var(--gov-blue);
+}
+
+.btn.gov-primary:hover,
+.btn.gold:hover {
+  background: var(--gov-blue-2);
+  color: #ffffff;
 }
 
 .btn.rose-gold {
-  background: linear-gradient(135deg, #f43f5e, #fb7185);
+  background: #be123c;
   color: #ffffff;
-  border-color: #fda4af;
+  border-color: #be123c;
+}
+
+.btn.rose-gold:hover {
+  background: #9f1239;
+  color: #ffffff;
 }
 
 .btn.ghost {
-  background: rgba(255, 255, 255, 0.04);
+  background: #f8fafc;
 }
 
 .btn.danger {
-  background: rgba(239, 68, 68, 0.16);
-  color: #fca5a5;
-  border-color: rgba(239, 68, 68, 0.4);
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fca5a5;
 }
 
 .btn.small {
@@ -171,13 +293,13 @@ body {
 .container {
   max-width: 1320px;
   margin: 0 auto;
-  padding: 26px 20px 70px;
+  padding: 24px 20px 60px;
 }
 
 .desk-view {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 22px;
 }
 
 .desk-view[hidden] {
@@ -186,8 +308,8 @@ body {
 
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 22px;
+  grid-template-columns: 1.12fr 1fr;
+  gap: 20px;
 }
 
 @media (max-width: 980px) {
@@ -197,11 +319,12 @@ body {
 }
 
 .card {
-  background: rgba(15, 22, 41, 0.88);
+  background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-top: 3px solid var(--gov-blue);
+  border-radius: 10px;
   padding: 22px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
 .card-head {
@@ -210,19 +333,21 @@ body {
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .eyebrow {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: 800;
-  letter-spacing: 1.4px;
-  color: var(--gold-light);
+  color: var(--gov-blue-2);
   display: block;
 }
 
 .card-head h2, .section-head h2 {
-  font-size: 19px;
+  font-size: 18.5px;
   font-weight: 800;
+  color: #0f172a;
   margin-top: 2px;
 }
 
@@ -234,59 +359,61 @@ body {
 }
 
 /* =========================================================
-   3D HOLOGRAM CITIZEN ID CARD
+   실물 대한민국 주민등록증 스타일 카드 (민트·화이트 태극문양 풍)
    ========================================================= */
 .id-card-stage {
   perspective: 1100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
-  padding: 10px 4px;
+  min-height: 295px;
+  padding: 12px 4px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
 }
 
 .citizen-id-card {
   position: relative;
   width: 100%;
-  max-width: 540px;
-  min-height: 305px;
-  border-radius: 20px;
-  padding: 22px 24px;
+  max-width: 530px;
+  min-height: 290px;
+  border-radius: 16px;
+  padding: 20px 24px;
   overflow: hidden;
   transform-style: preserve-3d;
-  transition: transform 0.12s ease-out, box-shadow 0.2s ease;
-  border: 1.5px solid rgba(251, 191, 36, 0.55);
-  background: linear-gradient(135deg, #161f38 0%, #0b1120 55%, #1d2849 100%);
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+  transition: transform 0.12s ease-out;
+  border: 1.5px solid #94b8b8;
+  background:
+    radial-gradient(circle at 80% 25%, rgba(16, 185, 129, 0.12), transparent 50%),
+    linear-gradient(135deg, #f5fbf9 0%, #e6f4f1 55%, #f0f7fc 100%);
+  color: #0f172a;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   user-select: none;
 }
 
-.citizen-id-card.theme-gold {
-  border-color: rgba(251, 191, 36, 0.65);
-  background: linear-gradient(135deg, #271e0a 0%, #0f1526 50%, #312308 100%);
-}
-
 .citizen-id-card.theme-cyber {
-  border-color: rgba(56, 189, 248, 0.65);
-  background: linear-gradient(135deg, #082338 0%, #0b1325 50%, #132e53 100%);
+  border-color: #7dd3fc;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 55%, #eff6ff 100%);
 }
 
 .citizen-id-card.theme-emerald {
-  border-color: rgba(16, 185, 129, 0.65);
-  background: linear-gradient(135deg, #062922 0%, #0d1627 50%, #0a362b 100%);
+  border-color: #6ee7b7;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 55%, #f0fdf4 100%);
 }
 
 .citizen-id-card.theme-crimson {
-  border-color: rgba(244, 63, 94, 0.65);
-  background: linear-gradient(135deg, #2f0b18 0%, #111526 50%, #3b0d1e 100%);
+  border-color: #fda4af;
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 55%, #fef2f2 100%);
 }
 
 .citizen-id-card.theme-obsidian {
-  border-color: rgba(148, 163, 184, 0.55);
-  background: linear-gradient(135deg, #090b10 0%, #141824 55%, #06070b 100%);
+  border-color: #475569;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #090d16 100%);
+  color: #f8fafc;
 }
 
 .citizen-id-card::before {
@@ -294,8 +421,8 @@ body {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.18), transparent 55%),
-    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.02) 0px, rgba(255, 255, 255, 0.02) 2px, transparent 2px, transparent 8px);
+    radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, 0.55), transparent 55%),
+    repeating-linear-gradient(45deg, rgba(0, 55, 100, 0.02) 0px, rgba(0, 55, 100, 0.02) 2px, transparent 2px, transparent 8px);
   pointer-events: none;
   z-index: 1;
 }
@@ -306,8 +433,8 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
-  padding-bottom: 10px;
+  border-bottom: 1.5px solid rgba(0, 55, 100, 0.18);
+  padding-bottom: 9px;
 }
 
 .id-gov-title {
@@ -317,50 +444,56 @@ body {
 }
 
 .id-gov-title strong {
-  font-size: 15px;
-  letter-spacing: 2px;
-  color: #fef3c7;
+  font-size: 18px;
+  letter-spacing: 3px;
+  font-weight: 900;
+  color: #003764;
+}
+
+.citizen-id-card.theme-obsidian .id-gov-title strong {
+  color: #fcd34d;
 }
 
 .id-gov-title span {
   font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 1px;
+  color: #475569;
+  letter-spacing: 0.8px;
   display: block;
 }
 
+.citizen-id-card.theme-obsidian .id-gov-title span {
+  color: #94a3b8;
+}
+
 .id-chip {
-  width: 40px;
-  height: 30px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #fcd34d 0%, #b45309 100%);
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.45);
-  position: relative;
+  width: 38px;
+  height: 28px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
+  border: 1px solid rgba(0, 0, 0, 0.25);
 }
 
 .id-card-body {
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 104px 1fr;
+  grid-template-columns: 102px 1fr;
   gap: 18px;
-  margin: 14px 0;
+  margin: 12px 0;
   align-items: center;
 }
 
 .id-photo-box {
-  width: 104px;
-  height: 126px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  width: 102px;
+  height: 124px;
+  border-radius: 8px;
+  background: #ffffff;
+  border: 1.5px solid #94a3b8;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
-  overflow: hidden;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.06);
 }
 
 .id-photo-emoji {
@@ -372,16 +505,16 @@ body {
   margin-top: 8px;
   font-size: 10px;
   font-weight: 800;
-  padding: 2px 7px;
-  border-radius: 99px;
-  background: rgba(0, 0, 0, 0.55);
-  color: var(--gold-light);
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--gov-blue);
+  color: #ffffff;
 }
 
 .id-fields {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
 }
 
 .id-name-row {
@@ -394,27 +527,36 @@ body {
 .id-name-row h3 {
   font-size: 22px;
   font-weight: 900;
-  letter-spacing: 0.5px;
+  letter-spacing: 2px;
+  color: #0f172a;
+}
+
+.citizen-id-card.theme-obsidian .id-name-row h3 {
   color: #ffffff;
 }
 
 .id-username {
   font-size: 12px;
-  color: var(--muted);
+  color: #475569;
 }
 
 .id-rrn {
   font-family: 'JetBrains Mono', 'Consolas', monospace;
-  font-size: 16px;
-  font-weight: 800;
+  font-size: 17px;
+  font-weight: 900;
   letter-spacing: 1.5px;
-  color: var(--gold-light);
-  background: rgba(0, 0, 0, 0.35);
-  padding: 4px 10px;
-  border-radius: 8px;
+  color: #003764;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 3px 10px;
+  border-radius: 6px;
   display: inline-block;
   width: fit-content;
-  border: 1px solid rgba(251, 191, 36, 0.25);
+  border: 1px solid #94a3b8;
+}
+
+.citizen-id-card.theme-obsidian .id-rrn {
+  background: rgba(0, 0, 0, 0.45);
+  color: #fcd34d;
 }
 
 .id-meta-grid {
@@ -426,20 +568,31 @@ body {
 }
 
 .id-meta-item span {
-  color: var(--muted);
+  color: #475569;
   font-size: 11px;
   margin-right: 4px;
 }
 
+.citizen-id-card.theme-obsidian .id-meta-item span {
+  color: #94a3b8;
+}
+
 .id-meta-item strong {
+  color: #0f172a;
+}
+
+.citizen-id-card.theme-obsidian .id-meta-item strong {
   color: #f8fafc;
 }
 
 .id-motto {
   font-size: 11.5px;
-  color: #cbd5e1;
-  font-style: italic;
+  color: #334155;
   margin-top: 2px;
+}
+
+.citizen-id-card.theme-obsidian .id-motto {
+  color: #cbd5e1;
 }
 
 .id-card-foot {
@@ -448,88 +601,95 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.14);
-  padding-top: 9px;
-  font-size: 11px;
-  color: #cbd5e1;
+  border-top: 1px solid rgba(0, 55, 100, 0.18);
+  padding-top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.citizen-id-card.theme-obsidian .id-card-foot {
+  color: #e2e8f0;
 }
 
 .id-seal {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  font-weight: 800;
+  gap: 6px;
+  font-weight: 900;
+  font-size: 13px;
+  color: #003764;
+}
+
+.citizen-id-card.theme-obsidian .id-seal {
   color: #fcd34d;
 }
 
 .stamp-red {
-  display: inline-block;
-  border: 1.5px solid #ef4444;
-  color: #f87171;
-  font-size: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #dc2626;
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  font-size: 11px;
   font-weight: 900;
-  padding: 1px 5px;
   border-radius: 4px;
-  letter-spacing: 1px;
 }
 
 /* =========================================================
-   DESK 2: COUPLE CERTIFICATE VIEWER & FORM
+   정부24 대한민국 공식 공문서 스타일 커플인증서 (등기필증)
    ========================================================= */
 .couple-cert-stage {
-  perspective: 1100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 410px;
-  padding: 8px 4px;
+  min-height: 425px;
+  padding: 12px 6px;
+  background: #e2e8f0;
+  border-radius: 10px;
 }
 
 .couple-cert-card {
   position: relative;
   width: 100%;
-  max-width: 570px;
-  min-height: 405px;
-  border-radius: 22px;
+  max-width: 580px;
+  min-height: 415px;
+  border-radius: 6px;
   padding: 26px 28px;
   overflow: hidden;
-  transform-style: preserve-3d;
-  transition: transform 0.12s ease-out;
-  border: 2px solid rgba(251, 113, 133, 0.7);
-  background: linear-gradient(145deg, #2b0f1c 0%, #111528 50%, #2d1224 100%);
-  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.7), inset 0 0 24px rgba(244, 63, 94, 0.15);
+  border: 2px solid #854d0e;
+  background: #fdfbf7;
+  color: #111827;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.18);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 14px;
-}
-
-.couple-cert-card.theme-rose {
-  border-color: rgba(251, 113, 133, 0.75);
-  background: linear-gradient(145deg, #321020 0%, #121629 52%, #391226 100%);
+  gap: 12px;
 }
 
 .couple-cert-card.theme-gold {
-  border-color: rgba(251, 191, 36, 0.75);
-  background: linear-gradient(145deg, #2d2109 0%, #101526 52%, #362508 100%);
+  border-color: #b45309;
+  background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
 }
 
 .couple-cert-card.theme-holo {
-  border-color: rgba(56, 189, 248, 0.75);
-  background: linear-gradient(145deg, #0b263b 0%, #161433 50%, #2b1338 100%);
+  border-color: #003764;
+  background: linear-gradient(180deg, #f8fafc 0%, #eff6ff 100%);
 }
 
 .couple-cert-card.theme-aurora {
-  border-color: rgba(52, 211, 153, 0.75);
-  background: linear-gradient(145deg, #072924 0%, #111830 50%, #1f1137 100%);
+  border-color: #be123c;
+  background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 100%);
 }
 
 .couple-cert-card::before {
   content: "";
   position: absolute;
-  inset: 8px;
-  border: 1px dashed rgba(255, 255, 255, 0.22);
-  border-radius: 15px;
+  inset: 7px;
+  border: 1px solid rgba(133, 77, 14, 0.35);
   pointer-events: none;
 }
 
@@ -539,41 +699,54 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-  padding-bottom: 10px;
+  border-bottom: 2px solid #1e293b;
+  padding-bottom: 8px;
+}
+
+.cert-top .id-gov-title strong {
+  color: #0f172a;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.cert-top .id-gov-title span {
+  color: #475569;
 }
 
 .cert-no-pill {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12px;
   font-weight: 800;
-  color: #fecdd3;
-  background: rgba(244, 63, 94, 0.22);
-  border: 1px solid rgba(251, 113, 133, 0.45);
-  padding: 4px 10px;
-  border-radius: 99px;
+  color: #003764;
+  background: #e0f2fe;
+  border: 1px solid #7dd3fc;
+  padding: 3px 10px;
+  border-radius: 4px;
 }
 
 .cert-title-block {
   text-align: center;
   position: relative;
   z-index: 2;
+  margin: 2px 0;
 }
 
 .cert-title-block .sub-title {
   font-size: 11px;
   letter-spacing: 2px;
-  color: var(--rose-light);
+  color: #475569;
   font-weight: 800;
 }
 
 .cert-title-block h3 {
-  font-size: 23px;
+  font-size: 24px;
   font-weight: 900;
-  color: #ffffff;
+  letter-spacing: 3px;
+  color: #0f172a;
   margin-top: 2px;
 }
 
+/* 정부24 등본 표 스타일 */
 .cert-partners-box {
   position: relative;
   z-index: 2;
@@ -581,10 +754,9 @@ body {
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 12px;
-  background: rgba(0, 0, 0, 0.32);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
-  padding: 14px 16px;
+  background: #ffffff;
+  border: 1.5px solid #334155;
+  padding: 12px 14px;
 }
 
 .partner-col {
@@ -592,15 +764,16 @@ body {
 }
 
 .partner-col .role {
-  font-size: 11px;
-  color: var(--rose-light);
+  font-size: 11.5px;
+  color: #475569;
+  font-weight: 700;
   display: block;
 }
 
 .partner-col .name {
   font-size: 20px;
   font-weight: 900;
-  color: #ffffff;
+  color: #0f172a;
   margin-top: 2px;
   display: block;
 }
@@ -613,17 +786,17 @@ body {
 }
 
 .heart-center .ring-icon {
-  font-size: 26px;
+  font-size: 22px;
 }
 
 .heart-center .dday-chip {
   font-size: 12px;
   font-weight: 900;
-  color: #fef08a;
-  background: rgba(245, 158, 11, 0.25);
-  border: 1px solid rgba(251, 191, 36, 0.5);
-  padding: 2px 9px;
-  border-radius: 99px;
+  color: #be123c;
+  background: #ffe4e6;
+  border: 1px solid #fda4af;
+  padding: 2px 10px;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
@@ -632,12 +805,11 @@ body {
   z-index: 2;
   text-align: center;
   font-size: 13px;
-  color: #f1f5f9;
+  color: #1e293b;
   line-height: 1.55;
   padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 12px;
-  font-style: italic;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
 }
 
 .cert-signatures-row {
@@ -645,43 +817,45 @@ body {
   z-index: 2;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 10px;
 }
 
 .cert-sign-slot {
-  background: rgba(0, 0, 0, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   padding: 6px 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 52px;
+  min-height: 50px;
 }
 
 .cert-sign-slot span {
-  font-size: 11px;
-  color: var(--muted);
+  font-size: 11.5px;
+  color: #334155;
 }
 
 .cert-sign-slot img {
-  max-height: 40px;
+  max-height: 38px;
   max-width: 120px;
   object-fit: contain;
 }
 
 .cert-sign-fallback {
-  font-family: 'Georgia', serif;
-  font-style: italic;
-  font-weight: 700;
-  color: #fde68a;
-  font-size: 14px;
+  font-weight: 800;
+  color: #dc2626;
+  font-size: 13px;
 }
 
 .form-row-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+
+.req {
+  color: #dc2626;
+  font-style: normal;
 }
 
 .sign-grid {
@@ -691,9 +865,9 @@ body {
 }
 
 .sign-box {
-  background: #090e1c;
+  background: #f8fafc;
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 8px;
 }
 
@@ -702,14 +876,15 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: 11.5px;
-  color: #cbd5e1;
+  font-weight: 700;
+  color: #334155;
   margin-bottom: 5px;
 }
 
 .text-btn {
   background: none;
   border: none;
-  color: var(--rose-light);
+  color: #dc2626;
   font-size: 11px;
   cursor: pointer;
   font-weight: 700;
@@ -718,18 +893,18 @@ body {
 .sign-canvas {
   width: 100%;
   height: 76px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(255, 255, 255, 0.18);
-  border-radius: 8px;
+  background: #ffffff;
+  border: 1px dashed #94a3b8;
+  border-radius: 6px;
   cursor: crosshair;
   touch-action: none;
 }
 
-/* DOSSIER */
+/* DOSSIER (정부24 등·초본 표 스타일) */
 .dossier-content {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
 .dossier-grid {
@@ -739,21 +914,24 @@ body {
 }
 
 .stat-box {
-  background: rgba(255, 255, 255, 0.03);
+  background: #f8fafc;
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 14px;
+  border-left: 3px solid var(--gov-blue);
+  border-radius: 6px;
+  padding: 11px 14px;
 }
 
 .stat-box .label {
-  font-size: 11px;
+  font-size: 11.5px;
+  font-weight: 700;
   color: var(--muted);
   display: block;
 }
 
 .stat-box .val {
-  font-size: 16px;
+  font-size: 15.5px;
   font-weight: 800;
+  color: #0f172a;
   margin-top: 3px;
   display: block;
 }
@@ -763,36 +941,36 @@ body {
   align-items: center;
   gap: 4px;
   padding: 3px 9px;
-  border-radius: 99px;
-  font-size: 11px;
+  border-radius: 5px;
+  font-size: 11.5px;
   font-weight: 700;
-  background: rgba(59, 130, 246, 0.16);
-  color: #93c5fd;
-  border: 1px solid rgba(59, 130, 246, 0.35);
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
 }
 
 .badge.gold {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fcd34d;
-  border-color: rgba(245, 158, 11, 0.45);
+  background: #fef3c7;
+  color: #92400e;
+  border-color: #fde68a;
 }
 
 .badge.rose {
-  background: rgba(244, 63, 94, 0.2);
-  color: #fda4af;
-  border-color: rgba(244, 63, 94, 0.45);
+  background: #ffe4e6;
+  color: #be123c;
+  border-color: #fecdd3;
 }
 
 .badge.clean {
-  background: rgba(16, 185, 129, 0.16);
-  color: #6ee7b7;
-  border-color: rgba(16, 185, 129, 0.4);
+  background: #d1fae5;
+  color: #065f46;
+  border-color: #a7f3d0;
 }
 
 .badge.warn {
-  background: rgba(239, 68, 68, 0.16);
-  color: #fca5a5;
-  border-color: rgba(239, 68, 68, 0.4);
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
 }
 
 /* SCANNER */
@@ -803,20 +981,26 @@ body {
 
 .scanner-bar input {
   flex: 1;
-  background: #090e1c;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 15px;
+  background: #ffffff;
+  border: 1.5px solid var(--border-strong);
+  border-radius: 7px;
+  padding: 11px 14px;
   color: var(--text);
   font-size: 14px;
 }
 
+.scanner-bar input:focus {
+  outline: none;
+  border-color: var(--gov-blue-2);
+}
+
 .verify-result-box {
   margin-top: 14px;
-  padding: 16px;
-  border-radius: 14px;
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  padding: 15px;
+  border-radius: 8px;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #064e3b;
 }
 
 /* DIRECTORY */
@@ -827,26 +1011,27 @@ body {
 }
 
 .directory-grid {
-  margin-top: 16px;
+  margin-top: 14px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
-  gap: 16px;
+  gap: 14px;
 }
 
 .mini-id-card {
-  background: rgba(15, 22, 41, 0.92);
+  background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 16px;
+  border-radius: 10px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  transition: transform 0.16s ease, border-color 0.16s ease;
+  gap: 9px;
+  transition: transform 0.14s ease, border-color 0.14s ease, box-shadow 0.14s ease;
 }
 
 .mini-id-card:hover {
   transform: translateY(-2px);
-  border-color: #4f6db0;
+  border-color: var(--gov-blue-2);
+  box-shadow: 0 6px 16px rgba(0, 55, 100, 0.08);
 }
 
 .mini-top {
@@ -865,8 +1050,9 @@ body {
 .mini-avatar {
   width: 44px;
   height: 44px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -876,23 +1062,44 @@ body {
 .mini-rrn {
   font-family: monospace;
   font-size: 12.5px;
-  color: var(--gold-light);
+  font-weight: 700;
+  color: var(--gov-blue);
 }
 
 .empty-box {
-  padding: 36px;
+  padding: 32px;
   text-align: center;
   color: var(--muted);
-  border: 1px dashed var(--border);
-  border-radius: 14px;
+  background: #f8fafc;
+  border: 1px dashed var(--border-strong);
+  border-radius: 10px;
+}
+
+/* FOOTER */
+.gov-footer {
+  background: #e2e8f0;
+  border-top: 1px solid #cbd5e1;
+  padding: 20px;
+  font-size: 12px;
+  color: #475569;
+}
+
+.gov-footer-inner {
+  max-width: 1320px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 /* MODAL */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(3, 6, 14, 0.78);
-  backdrop-filter: blur(6px);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -906,18 +1113,22 @@ body {
 
 .modal-box {
   width: 100%;
-  max-width: 480px;
-  background: var(--panel);
+  max-width: 490px;
+  background: #ffffff;
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-top: 4px solid var(--gov-blue);
+  border-radius: 10px;
   padding: 22px;
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.25);
 }
 
 .modal-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .icon-close {
@@ -939,17 +1150,25 @@ body {
   flex-direction: column;
   gap: 4px;
   font-size: 12px;
-  color: #cbd5e1;
+  font-weight: 700;
+  color: #334155;
 }
 
 .modal-form input,
 .modal-form select,
 .modal-form textarea {
-  background: #090e1c;
-  border: 1px solid var(--border);
-  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
   padding: 9px 11px;
   color: var(--text);
   font-size: 13px;
   font-family: inherit;
+}
+
+.modal-form input:focus,
+.modal-form select:focus,
+.modal-form textarea:focus {
+  outline: none;
+  border-color: var(--gov-blue-2);
 }
