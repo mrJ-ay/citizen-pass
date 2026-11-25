@@ -7,6 +7,8 @@
   --muted: #94a3b8;
   --gold: #f59e0b;
   --gold-light: #fcd34d;
+  --rose: #f43f5e;
+  --rose-light: #fda4af;
   --blue: #3b82f6;
   --emerald: #10b981;
   --danger: #ef4444;
@@ -30,15 +32,15 @@ body {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(7, 10, 19, 0.88);
+  background: rgba(7, 10, 19, 0.9);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
 
 .topbar-inner {
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
-  padding: 14px 20px;
+  padding: 13px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -57,15 +59,51 @@ body {
 }
 
 .brand h1 {
-  font-size: 20px;
-  letter-spacing: 1.5px;
+  font-size: 19px;
+  letter-spacing: 1px;
   font-weight: 800;
   color: var(--gold-light);
 }
 
 .brand .sub {
-  font-size: 12px;
+  font-size: 11.5px;
   color: var(--muted);
+}
+
+.desk-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(15, 22, 41, 0.9);
+  padding: 5px;
+  border-radius: 13px;
+  border: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.desk-tab {
+  padding: 8px 16px;
+  border-radius: 9px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.desk-tab:hover {
+  color: var(--text);
+}
+
+.desk-tab.active[data-desk="citizen"] {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #090d16;
+}
+
+.desk-tab.active[data-desk="couple"] {
+  background: linear-gradient(135deg, #f43f5e, #e11d48);
+  color: #ffffff;
 }
 
 .topbar-actions {
@@ -103,6 +141,12 @@ body {
   border-color: #fbbf24;
 }
 
+.btn.rose-gold {
+  background: linear-gradient(135deg, #f43f5e, #fb7185);
+  color: #ffffff;
+  border-color: #fda4af;
+}
+
 .btn.ghost {
   background: rgba(255, 255, 255, 0.04);
 }
@@ -125,12 +169,19 @@ body {
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1320px;
   margin: 0 auto;
   padding: 26px 20px 70px;
+}
+
+.desk-view {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.desk-view[hidden] {
+  display: none !important;
 }
 
 .hero-grid {
@@ -422,6 +473,258 @@ body {
   letter-spacing: 1px;
 }
 
+/* =========================================================
+   DESK 2: COUPLE CERTIFICATE VIEWER & FORM
+   ========================================================= */
+.couple-cert-stage {
+  perspective: 1100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 410px;
+  padding: 8px 4px;
+}
+
+.couple-cert-card {
+  position: relative;
+  width: 100%;
+  max-width: 570px;
+  min-height: 405px;
+  border-radius: 22px;
+  padding: 26px 28px;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.12s ease-out;
+  border: 2px solid rgba(251, 113, 133, 0.7);
+  background: linear-gradient(145deg, #2b0f1c 0%, #111528 50%, #2d1224 100%);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.7), inset 0 0 24px rgba(244, 63, 94, 0.15);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.couple-cert-card.theme-rose {
+  border-color: rgba(251, 113, 133, 0.75);
+  background: linear-gradient(145deg, #321020 0%, #121629 52%, #391226 100%);
+}
+
+.couple-cert-card.theme-gold {
+  border-color: rgba(251, 191, 36, 0.75);
+  background: linear-gradient(145deg, #2d2109 0%, #101526 52%, #362508 100%);
+}
+
+.couple-cert-card.theme-holo {
+  border-color: rgba(56, 189, 248, 0.75);
+  background: linear-gradient(145deg, #0b263b 0%, #161433 50%, #2b1338 100%);
+}
+
+.couple-cert-card.theme-aurora {
+  border-color: rgba(52, 211, 153, 0.75);
+  background: linear-gradient(145deg, #072924 0%, #111830 50%, #1f1137 100%);
+}
+
+.couple-cert-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.22);
+  border-radius: 15px;
+  pointer-events: none;
+}
+
+.cert-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  padding-bottom: 10px;
+}
+
+.cert-no-pill {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fecdd3;
+  background: rgba(244, 63, 94, 0.22);
+  border: 1px solid rgba(251, 113, 133, 0.45);
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+.cert-title-block {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.cert-title-block .sub-title {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--rose-light);
+  font-weight: 800;
+}
+
+.cert-title-block h3 {
+  font-size: 23px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+.cert-partners-box {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.32);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.partner-col {
+  text-align: center;
+}
+
+.partner-col .role {
+  font-size: 11px;
+  color: var(--rose-light);
+  display: block;
+}
+
+.partner-col .name {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  margin-top: 2px;
+  display: block;
+}
+
+.heart-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.heart-center .ring-icon {
+  font-size: 26px;
+}
+
+.heart-center .dday-chip {
+  font-size: 12px;
+  font-weight: 900;
+  color: #fef08a;
+  background: rgba(245, 158, 11, 0.25);
+  border: 1px solid rgba(251, 191, 36, 0.5);
+  padding: 2px 9px;
+  border-radius: 99px;
+  white-space: nowrap;
+}
+
+.cert-vow-box {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  font-size: 13px;
+  color: #f1f5f9;
+  line-height: 1.55;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  font-style: italic;
+}
+
+.cert-signatures-row {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cert-sign-slot {
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+}
+
+.cert-sign-slot span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.cert-sign-slot img {
+  max-height: 40px;
+  max-width: 120px;
+  object-fit: contain;
+}
+
+.cert-sign-fallback {
+  font-family: 'Georgia', serif;
+  font-style: italic;
+  font-weight: 700;
+  color: #fde68a;
+  font-size: 14px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sign-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.sign-box {
+  background: #090e1c;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.sign-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11.5px;
+  color: #cbd5e1;
+  margin-bottom: 5px;
+}
+
+.text-btn {
+  background: none;
+  border: none;
+  color: var(--rose-light);
+  font-size: 11px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.sign-canvas {
+  width: 100%;
+  height: 76px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  cursor: crosshair;
+  touch-action: none;
+}
+
 /* DOSSIER */
 .dossier-content {
   display: flex;
@@ -449,7 +752,7 @@ body {
 }
 
 .stat-box .val {
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 800;
   margin-top: 3px;
   display: block;
@@ -472,6 +775,12 @@ body {
   background: rgba(245, 158, 11, 0.18);
   color: #fcd34d;
   border-color: rgba(245, 158, 11, 0.45);
+}
+
+.badge.rose {
+  background: rgba(244, 63, 94, 0.2);
+  color: #fda4af;
+  border-color: rgba(244, 63, 94, 0.45);
 }
 
 .badge.clean {
@@ -622,23 +931,25 @@ body {
 .modal-form {
   display: flex;
   flex-direction: column;
-  gap: 13px;
+  gap: 11px;
 }
 
 .modal-form label {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  font-size: 12.5px;
+  gap: 4px;
+  font-size: 12px;
   color: #cbd5e1;
 }
 
 .modal-form input,
-.modal-form select {
+.modal-form select,
+.modal-form textarea {
   background: #090e1c;
   border: 1px solid var(--border);
   border-radius: 10px;
-  padding: 10px 12px;
+  padding: 9px 11px;
   color: var(--text);
-  font-size: 13.5px;
+  font-size: 13px;
+  font-family: inherit;
 }

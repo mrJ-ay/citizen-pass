@@ -3,23 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CITIZEN PASS — ONEID 디지털 주민등록청</title>
-  <link rel="stylesheet" href="/style.css?v=1" />
+  <title>CITIZEN PASS — 통합 행정복지센터 (주민등록 · 커플인증서)</title>
+  <link rel="stylesheet" href="/style.css?v=4" />
 </head>
 <body>
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
-        <span class="crest">🪪</span>
+        <span class="crest">🏛️</span>
         <div>
-          <h1>CITIZEN PASS</h1>
-          <span class="sub">ATELIER J · ONEID 디지털 주민등록청</span>
+          <h1>CITIZEN PASS · 통합 주민센터</h1>
+          <span class="sub">ATELIER J · ONEID 디지털 행정복지센터 (주민등록청 &amp; 커플등기소)</span>
         </div>
       </div>
 
+      <!-- ADMINISTRATIVE WINDOW TABS -->
+      <nav class="desk-tabs" id="deskTabs">
+        <button type="button" class="desk-tab active" data-desk="citizen">🪪 제1창구 · 주민등록증 / 신원조회</button>
+        <button type="button" class="desk-tab" data-desk="couple">💍 제2창구 · 커플인증서 / 교제등기소</button>
+      </nav>
+
       <div class="topbar-actions">
         <a href="https://assembly-lovat.vercel.app" target="_blank" rel="noopener" class="btn ghost">🏛️ AGORA 의회</a>
-        <a href="https://one-bank.onrender.com" target="_blank" rel="noopener" class="btn ghost">🏦 ONE BANK</a>
         <a href="https://oneid-helpdesk.onrender.com" target="_blank" rel="noopener" class="btn ghost">🛡️ 고객센터</a>
         <button type="button" id="oneidBtn" class="btn gold">ONEID 로그인 · 민증 발급</button>
       </div>
@@ -27,71 +32,205 @@
   </header>
 
   <main class="container">
-    <!-- HERO: MY HOLOGRAM CITIZEN ID CARD & ECOSYSTEM DOSSIER -->
-    <section class="hero-grid">
-      <div class="card id-stage-card">
+    <!-- =========================================================
+         DESK 1: CITIZEN ID CARD & ECOSYSTEM DOSSIER
+         ========================================================= -->
+    <div id="deskCitizenView" class="desk-view">
+      <section class="hero-grid">
+        <div class="card id-stage-card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">OFFICIAL DIGITAL IDENTITY CARD</span>
+              <h2>전자 주민등록증 (홀로그램 민증)</h2>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button type="button" id="copyCitizenNoBtn" class="btn small ghost" hidden>📋 민증번호 복사</button>
+              <button type="button" id="openCustomModalBtn" class="btn small gold" hidden>✨ 민증 커스텀</button>
+            </div>
+          </div>
+
+          <div id="idCardStage" class="id-card-stage"></div>
+          <p class="stage-hint">💡 카드 위에 마우스를 움직이면 3D 홀로그램 보안 필름이 반사됩니다.</p>
+        </div>
+
+        <div class="card dossier-card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">ONEID ECOSYSTEM DOSSIER</span>
+              <h2>생태계 통합 신원 · 가족/커플 · 활동 기록부</h2>
+            </div>
+            <span id="dossierStatusBadge" class="badge">실시간 연동</span>
+          </div>
+
+          <div id="dossierContent" class="dossier-content"></div>
+        </div>
+      </section>
+
+      <section class="card scanner-section">
         <div class="card-head">
           <div>
-            <span class="eyebrow">OFFICIAL DIGITAL IDENTITY CARD</span>
-            <h2>전자 주민등록증 (홀로그램 민증)</h2>
+            <span class="eyebrow">IDENTITY VERIFICATION SCANNER</span>
+            <h2>🔍 주민등록번호 · 시민 신분증 진위 확인 조회소</h2>
           </div>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <button type="button" id="copyCitizenNoBtn" class="btn small ghost" hidden>📋 민증번호 복사</button>
-            <button type="button" id="openCustomModalBtn" class="btn small gold" hidden>✨ 민증 커스텀</button>
+        </div>
+        <form id="verifyForm" class="scanner-bar">
+          <input id="verifyInput" type="text" placeholder="주민등록번호(예: 260412-1...) 또는 시민 닉네임 / 아이디 입력" required />
+          <button type="submit" class="btn gold">신분증 진위 조회</button>
+        </form>
+        <div id="verifyResultBox" class="verify-result-box" hidden></div>
+      </section>
+
+      <section class="directory-section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">REGISTERED CITIZENS REGISTRY</span>
+            <h2>공식 등재 시민 명부 (<span id="citizenCount">0</span>명)</h2>
+            <p>ONEID로 주민등록증을 발급받은 시민들의 공식 신분증과 커플 등기·의회 소속 현황입니다. 카드를 클릭하면 상세 신원을 조회합니다.</p>
           </div>
         </div>
 
-        <div id="idCardStage" class="id-card-stage">
-          <!-- Rendered by app.js -->
+        <div id="directoryGrid" class="directory-grid">
+          <div class="empty-box">시민 명부를 불러오는 중...</div>
         </div>
-        <p class="stage-hint">💡 카드 위에 마우스를 움직이면 3D 홀로그램 보안 필름이 반사됩니다.</p>
-      </div>
+      </section>
+    </div>
 
-      <!-- RIGHT: ECOSYSTEM REAL-TIME DOSSIER -->
-      <div class="card dossier-card">
+    <!-- =========================================================
+         DESK 2: COUPLE CERTIFICATE & REGISTRY OFFICE
+         ========================================================= -->
+    <div id="deskCoupleView" class="desk-view" hidden>
+      <section class="hero-grid couple-hero-grid">
+        <!-- LEFT: CERTIFICATE PREVIEW & PNG DOWNLOAD -->
+        <div class="card couple-stage-card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">OFFICIAL COUPLE &amp; VOW CERTIFICATE</span>
+              <h2>💍 공식 커플인증서 · 교제 등기필증</h2>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <button type="button" id="downloadCouplePngBtn" class="btn small gold">📸 인증서 PNG 이미지 저장</button>
+              <button type="button" id="copyCoupleCertNoBtn" class="btn small ghost">📋 등기번호 복사</button>
+            </div>
+          </div>
+
+          <div id="coupleCertStage" class="couple-cert-stage">
+            <!-- Rendered by app.js -->
+          </div>
+          <p class="stage-hint">💡 우측 신청서에서 내용을 입력하고 서명하면 주민센터 공식 직인이 찍힌 커플인증서가 즉시 발급되며, 시민 민증에도 자동 연동됩니다.</p>
+        </div>
+
+        <!-- RIGHT: ISSUE NEW COUPLE CERTIFICATE FORM -->
+        <div class="card couple-form-card">
+          <div class="card-head">
+            <div>
+              <span class="eyebrow">COUPLE REGISTRATION APPLICATION</span>
+              <h2>📝 커플인증서 신규 발급 신청서</h2>
+            </div>
+            <span class="badge rose">누구나 즉시 발급</span>
+          </div>
+
+          <form id="coupleIssueForm" class="modal-form">
+            <div class="form-row-2">
+              <label>
+                <span>신청인 (Partner A 이름/닉네임)</span>
+                <input id="partnerANameInput" type="text" maxlength="24" placeholder="예: 홍길동" list="citizenNickList" required />
+              </label>
+              <label>
+                <span>신청인 애칭 / 호칭</span>
+                <input id="partnerARoleInput" type="text" maxlength="20" value="사랑하는 사람" placeholder="예: 남편 / 남자친구 / 주인님" required />
+              </label>
+            </div>
+
+            <div class="form-row-2">
+              <label>
+                <span>파트너 (Partner B 이름/닉네임)</span>
+                <input id="partnerBNameInput" type="text" maxlength="24" placeholder="예: 성춘향" list="citizenNickList" required />
+              </label>
+              <label>
+                <span>파트너 애칭 / 호칭</span>
+                <input id="partnerBRoleInput" type="text" maxlength="20" value="소중한 사람" placeholder="예: 아내 / 여자친구 / 공주님" required />
+              </label>
+            </div>
+            <datalist id="citizenNickList"></datalist>
+
+            <div class="form-row-2">
+              <label>
+                <span>공식 커플 칭호 · 타이틀</span>
+                <input id="coupleTitleInput" type="text" maxlength="32" value="아텔리에 공식 커플" placeholder="예: 세기의 천생연분 커플" required />
+              </label>
+              <label>
+                <span>우리가 처음 만난 날 (D-Day 자동 계산)</span>
+                <input id="coupleStartDateInput" type="date" required />
+              </label>
+            </div>
+
+            <label>
+              <span>인증서 홀로그램 · 금박 테마</span>
+              <select id="coupleThemeSelect">
+                <option value="rose">💖 로즈골드 블러썸 (Rose Gold Blossom)</option>
+                <option value="gold">👑 황실 임페리얼 골드 (Imperial Royal Gold)</option>
+                <option value="holo">💠 크리스탈 홀로그램 (Crystal Hologram)</option>
+                <option value="aurora">🌌 미드나잇 오로라 (Midnight Aurora)</option>
+              </select>
+            </label>
+
+            <label>
+              <span>두 사람의 공식 커플 서약문 (최대 160자)</span>
+              <textarea id="coupleVowInput" rows="2" maxlength="160" required>서로를 아끼고 존중하며 언제나 함께할 것을 아텔리에 통합 주민센터 앞에 공식 서약합니다.</textarea>
+            </label>
+
+            <div class="sign-grid">
+              <div class="sign-box">
+                <div class="sign-head">
+                  <span>✍️ 신청인(A) 자필 서명</span>
+                  <button type="button" class="text-btn" id="clearSignABtn">지우기</button>
+                </div>
+                <canvas id="signCanvasA" width="210" height="76" class="sign-canvas"></canvas>
+              </div>
+              <div class="sign-box">
+                <div class="sign-head">
+                  <span>✍️ 파트너(B) 자필 서명</span>
+                  <button type="button" class="text-btn" id="clearSignBBtn">지우기</button>
+                </div>
+                <canvas id="signCanvasB" width="210" height="76" class="sign-canvas"></canvas>
+              </div>
+            </div>
+
+            <button type="submit" class="btn rose-gold full">💍 주민센터 공식 커플인증서 발급 및 등기</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- COUPLE VERIFICATION SCANNER -->
+      <section class="card scanner-section">
         <div class="card-head">
           <div>
-            <span class="eyebrow">ONEID ECOSYSTEM DOSSIER</span>
-            <h2>생태계 통합 신원 · 활동 기록부</h2>
+            <span class="eyebrow">COUPLE REGISTRY VERIFICATION</span>
+            <h2>🔍 커플 등기번호(CPL-2026-...) · 커플 진위 조회소</h2>
           </div>
-          <span id="dossierStatusBadge" class="badge">실시간 연동</span>
+        </div>
+        <form id="verifyCoupleForm" class="scanner-bar">
+          <input id="verifyCoupleInput" type="text" placeholder="커플 등기번호(예: CPL-2026-...) 또는 커플 이름 입력" required />
+          <button type="submit" class="btn rose-gold">커플 등기 조회</button>
+        </form>
+        <div id="verifyCoupleResultBox" class="verify-result-box" hidden></div>
+      </section>
+
+      <!-- PUBLIC COUPLE REGISTRY DIRECTORY -->
+      <section class="directory-section">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">OFFICIAL COUPLE REGISTRY</span>
+            <h2>공식 등재 커플 등기부 (<span id="coupleCount">0</span>쌍)</h2>
+            <p>통합 주민센터에 공식 등기된 커플 목록입니다. 카드를 클릭하면 상단 인증서 뷰어에서 해당 커플인증서를 열람·저장할 수 있습니다.</p>
+          </div>
         </div>
 
-        <div id="dossierContent" class="dossier-content">
-          <!-- Rendered by app.js -->
+        <div id="coupleDirectoryGrid" class="directory-grid">
+          <div class="empty-box">커플 등기부를 불러오는 중...</div>
         </div>
-      </div>
-    </section>
-
-    <!-- VERIFICATION SCANNER -->
-    <section class="card scanner-section">
-      <div class="card-head">
-        <div>
-          <span class="eyebrow">IDENTITY VERIFICATION SCANNER</span>
-          <h2>🔍 주민등록번호 · 시민 신분증 진위 확인 조회소</h2>
-        </div>
-      </div>
-      <form id="verifyForm" class="scanner-bar">
-        <input id="verifyInput" type="text" placeholder="주민등록번호(예: 260412-1...) 또는 시민 닉네임 / 아이디 입력" required />
-        <button type="submit" class="btn gold">신분증 진위 조회</button>
-      </form>
-      <div id="verifyResultBox" class="verify-result-box" hidden></div>
-    </section>
-
-    <!-- PUBLIC CITIZEN DIRECTORY -->
-    <section class="directory-section">
-      <div class="section-head">
-        <div>
-          <span class="eyebrow">REGISTERED CITIZENS REGISTRY</span>
-          <h2>공식 등재 시민 명부 (<span id="citizenCount">0</span>명)</h2>
-          <p>ONEID로 주민등록증을 발급받은 시민들의 공식 신분증과 의회·생태계 소속 현황입니다. 카드를 클릭하면 상세 신원을 조회합니다.</p>
-        </div>
-      </div>
-
-      <div id="directoryGrid" class="directory-grid">
-        <div class="empty-box">시민 명부를 불러오는 중...</div>
-      </div>
-    </section>
+      </section>
+    </div>
   </main>
 
   <!-- CUSTOMIZE ID CARD MODAL -->
@@ -124,6 +263,7 @@
             <option value="⚔️">⚔️ KEYWAR 투사</option>
             <option value="🕶️">🕶️ 언더그라운드 요원</option>
             <option value="📰">📰 언론인 / 편집장</option>
+            <option value="💍">💍 공식 커플</option>
           </select>
         </label>
         <label>
@@ -165,6 +305,6 @@
     </div>
   </div>
 
-  <script type="module" src="/app.js?v=3"></script>
+  <script type="module" src="/app.js?v=4"></script>
 </body>
 </html>

@@ -1,10 +1,8 @@
 /* =========================================================
-   CITIZEN PASS — ONEID 디지털 주민등록청 & 시민 신분증 조회 시스템
-   - ONEID 로그인 시 공식 전자 주민등록증(홀로그램 ID 카드) 자동 발급
-   - AGORA(가상 의회) 소속 정당 · 법안 발의 · 표결 기록 실시간 연동
-   - PIGSTY 검열 격리 내역(전과/주의 기록) 및 ONE BANK 계좌 연동 표시
-   - 시민 고유 주민등록번호(26XXXX-XXXXXXX) 자동 생성 & 진위 확인 조회소
-   - 총괄관리자 전용: 특별 훈장/직책 수여 및 시민 신분 기록 관리
+   CITIZEN PASS — ATELIER J · ONEID 통합 행정복지센터 (디지털 주민센터)
+   - 제1창구: 전자 주민등록증(홀로그램 민증) 발급 · 커스텀 · 생태계 통합 신원 조회
+   - 제2창구: 공식 커플인증서(교제·혼인 등기) 발급 · 전자서명 · D-Day 계산 · 등기부 조회 · PNG 다운로드
+   - 민증 자동 연동: 커플 등기된 시민은 주민등록증과 신원 기록부에 파트너 & D+N일 배지 자동 표시
    ========================================================= */
 import path from 'path';
 import crypto from 'crypto';
@@ -39,7 +37,7 @@ const pool = rawDbUrl
   : null;
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 function generateCitizenNo(userId) {
@@ -50,6 +48,11 @@ function generateCitizenNo(userId) {
   const backNum = (parseInt(hash.slice(8, 16), 16) % 899999) + 100000;
   const genderDigit = (parseInt(hash.slice(16, 18), 16) % 2) + 1;
   return `${front}-${genderDigit}${backNum}`;
+}
+
+function generateCoupleCertNo() {
+  const rand = crypto.randomBytes(3).toString('hex').toUpperCase();
+  return `CPL-2026-${rand}`;
 }
 
 async function initDb() {
@@ -70,6 +73,26 @@ async function initDb() {
       special_badge TEXT,
       issued_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
       updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS couple_certificates (
+      id SERIAL PRIMARY KEY,
+      cert_no TEXT UNIQUE NOT NULL,
+      partner_a_user_id TEXT,
+      partner_a_name TEXT NOT NULL,
+      partner_a_role TEXT NOT NULL DEFAULT '사랑하는 사람',
+      partner_b_user_id TEXT,
+      partner_b_name TEXT NOT NULL,
+      partner_b_role TEXT NOT NULL DEFAULT '소중한 사람',
+      couple_title TEXT NOT NULL DEFAULT '공식 등록 커플',
+      start_date DATE NOT NULL DEFAULT CURRENT_DATE,
+      vow TEXT NOT NULL DEFAULT '서로를 아끼고 존중하며 함께할 것을 아텔리에 주민센터 앞에 서약합니다.',
+      theme TEXT NOT NULL DEFAULT 'rose',
+      sign_a TEXT,
+      sign_b TEXT,
+      status TEXT NOT NULL DEFAULT 'active',
+      created_by_user_id TEXT,
+      issued_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
   `);
 }
@@ -119,6 +142,64 @@ async function verifyOneIdUser(req) {
   }
 }
 
+function calcDaysTogether(startDateStr) {
+  if (!startDateStr) return 1;
+  const start = new Date(startDateStr);
+  const now = new Date();
+  const diff = Math.floor((now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1;
+  return Math.max(1, diff);
+}
+
+function formatCoupleRow(row) {
+  if (!row) return null;
+  const startStr =
+    row.start_date instanceof Date
+      ? row.start_date.toISOString().slice(0, 10)
+      : String(row.start_date || '').slice(0, 10);
+  return {
+    id: row.id,
+    certNo: row.cert_no,
+    partnerAUserId: row.partner_a_user_id,
+    partnerAName: row.partner_a_name,
+    partnerARole: row.partner_a_role,
+    partnerBUserId: row.partner_b_user_id,
+    partnerBName: row.partner_b_name,
+    partnerBRole: row.partner_b_role,
+    coupleTitle: row.couple_title,
+    startDate: startStr,
+    daysTogether: calcDaysTogether(startStr),
+    vow: row.vow,
+    theme: row.theme || 'rose',
+    signA: row.sign_a || null,
+    signB: row.sign_b || null,
+    status: row.status,
+    createdByUserId: row.created_by_user_id,
+    issuedAt: row.issued_at,
+  };
+}
+
+async function findActiveCoupleForCitizen(userId, nickname) {
+  if (!pool) return null;
+  try {
+    const { rows } = await pool.query(
+      `SELECT * FROM couple_certificates
+       WHERE status = 'active'
+         AND (
+           partner_a_user_id = $1
+           OR partner_b_user_id = $1
+           OR LOWER(partner_a_name) = LOWER($2)
+           OR LOWER(partner_b_name) = LOWER($2)
+         )
+       ORDER BY issued_at DESC
+       LIMIT 1`,
+      [String(userId || ''), String(nickname || '')]
+    );
+    return rows[0] ? formatCoupleRow(rows[0]) : null;
+  } catch {
+    return null;
+  }
+}
+
 async function getEcosystemProfile(userId, username, nickname, isAdmin) {
   let partyName = '무소속';
   let partyColor = '#64748b';
@@ -158,15 +239,16 @@ async function getEcosystemProfile(userId, username, nickname, isAdmin) {
         [userId]
       );
       speechesMade = sRows[0]?.cnt || 0;
-    } catch {
-      // ignore if assembly tables not ready
-    }
+    } catch {}
   }
+
+  const couple = await findActiveCoupleForCitizen(userId, nickname);
 
   const activityScore =
     100 +
     (isAdmin ? 900 : 0) +
     (partyName !== '무소속' ? 80 : 0) +
+    (couple ? 50 : 0) +
     billsProposed * 120 +
     votesCast * 30 +
     speechesMade * 25;
@@ -175,7 +257,7 @@ async function getEcosystemProfile(userId, username, nickname, isAdmin) {
   if (isAdmin) citizenTier = 'SOVEREIGN · 국가원수 / 총괄관리자';
   else if (activityScore >= 500) citizenTier = 'DIAMOND · 명예 입법의원';
   else if (activityScore >= 280) citizenTier = 'GOLD · 정식 의회의원';
-  else if (activityScore >= 160) citizenTier = 'SILVER · 활동 시민';
+  else if (activityScore >= 150) citizenTier = 'SILVER · 활동 시민';
 
   return {
     partyName,
@@ -186,6 +268,19 @@ async function getEcosystemProfile(userId, username, nickname, isAdmin) {
     speechesMade,
     activityScore,
     citizenTier,
+    couple: couple
+      ? {
+          certNo: couple.certNo,
+          partnerName:
+            couple.partnerAUserId === userId ||
+            couple.partnerAName.toLowerCase() === String(nickname || '').toLowerCase()
+              ? couple.partnerBName
+              : couple.partnerAName,
+          coupleTitle: couple.coupleTitle,
+          daysTogether: couple.daysTogether,
+          startDate: couple.startDate,
+        }
+      : null,
   };
 }
 
@@ -232,7 +327,7 @@ async function formatCardWithStats(card) {
 app.get('/api/health', (_req, res) => {
   res.json({
     ok: true,
-    service: 'citizen-pass',
+    service: 'citizen-pass-center',
     dbConnected: Boolean(pool),
   });
 });
@@ -248,7 +343,7 @@ app.get('/api/config', (_req, res) => {
   });
 });
 
-// 전체 시민 명부 + 내 주민등록증 조회
+// 전체 시민 명부 + 내 주민등록증 + 공식 커플 등기부 조회
 app.get('/api/overview', async (req, res) => {
   if (!pool) return res.status(500).json({ error: 'DATABASE_URL not configured' });
   const user = await verifyOneIdUser(req);
@@ -265,10 +360,17 @@ app.get('/api/overview', async (req, res) => {
     );
     const directory = await Promise.all(allCards.map((c) => formatCardWithStats(c)));
 
+    const { rows: coupleRows } = await pool.query(
+      `SELECT * FROM couple_certificates WHERE status = 'active' ORDER BY issued_at DESC LIMIT 60`
+    );
+    const couples = coupleRows.map(formatCoupleRow);
+
     res.json({
       me: myCard,
       totalCitizens: allCards.length,
       directory,
+      totalCouples: couples.length,
+      couples,
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -296,7 +398,7 @@ app.get('/api/verify', async (req, res) => {
     res.json({
       valid: true,
       verifiedAt: new Date().toISOString(),
-      issuer: 'ATELIER J · ONEID 디지털 주민등록청장',
+      issuer: 'ATELIER J · ONEID 통합 행정복지센터장',
       card,
     });
   } catch (err) {
@@ -304,7 +406,7 @@ app.get('/api/verify', async (req, res) => {
   }
 });
 
-// 내 신분증 커스터마이징 (직함, 가훈/한줄소개, 주소지, 카드 홀로그램 테마, 아이콘)
+// 내 신분증 커스터마이징
 app.put('/api/me/card', async (req, res) => {
   const user = await verifyOneIdUser(req);
   if (!user) return res.status(401).json({ error: 'ONEID 로그인이 필요합니다.' });
@@ -338,7 +440,142 @@ app.put('/api/me/card', async (req, res) => {
   }
 });
 
-// 총괄관리자 전용: 특정 시민에게 공식 훈장/특별 직책 부여 또는 신분증 말소
+// =========================================================
+// 제2창구: 공식 커플인증서 (교제·혼인 등기소) API
+// =========================================================
+
+// 커플인증서 발급 (로그인 시민 또는 자유 발급 모두 지원)
+app.post('/api/couples', async (req, res) => {
+  if (!pool) return res.status(500).json({ error: 'DATABASE_URL not configured' });
+  const user = await verifyOneIdUser(req);
+
+  const partnerAName = String(req.body?.partnerAName || '').trim().slice(0, 24);
+  const partnerBName = String(req.body?.partnerBName || '').trim().slice(0, 24);
+  if (!partnerAName || !partnerBName) {
+    return res.status(400).json({ error: '두 사람의 이름(또는 닉네임)을 모두 입력해 주세요.' });
+  }
+
+  const partnerARole = String(req.body?.partnerARole || '사랑하는 사람').trim().slice(0, 24) || '사랑하는 사람';
+  const partnerBRole = String(req.body?.partnerBRole || '소중한 사람').trim().slice(0, 24) || '소중한 사람';
+  const coupleTitle = String(req.body?.coupleTitle || '공식 등록 커플').trim().slice(0, 32) || '공식 등록 커플';
+  const rawDate = String(req.body?.startDate || '').trim();
+  const startDate = /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : new Date().toISOString().slice(0, 10);
+  const vow =
+    String(req.body?.vow || '').trim().slice(0, 160) ||
+    '서로를 아끼고 존중하며 함께할 것을 아텔리에 통합 주민센터 앞에 서약합니다.';
+  const allowedThemes = ['rose', 'gold', 'holo', 'aurora'];
+  const theme = allowedThemes.includes(req.body?.theme) ? req.body.theme : 'rose';
+  const signA = typeof req.body?.signA === 'string' && req.body.signA.startsWith('data:image/') ? req.body.signA : null;
+  const signB = typeof req.body?.signB === 'string' && req.body.signB.startsWith('data:image/') ? req.body.signB : null;
+
+  try {
+    // 시민 명부에 등록된 닉네임이면 user_id 자동 매칭
+    const { rows: matchA } = await pool.query(
+      'SELECT user_id FROM citizen_cards WHERE LOWER(nickname) = LOWER($1) OR LOWER(username) = LOWER($1) LIMIT 1',
+      [partnerAName]
+    );
+    const { rows: matchB } = await pool.query(
+      'SELECT user_id FROM citizen_cards WHERE LOWER(nickname) = LOWER($1) OR LOWER(username) = LOWER($1) LIMIT 1',
+      [partnerBName]
+    );
+
+    const partnerAUserId = matchA[0]?.user_id || (user && user.nickname === partnerAName ? user.id : null);
+    const partnerBUserId = matchB[0]?.user_id || null;
+    const certNo = generateCoupleCertNo();
+
+    const { rows } = await pool.query(
+      `INSERT INTO couple_certificates
+         (cert_no, partner_a_user_id, partner_a_name, partner_a_role,
+          partner_b_user_id, partner_b_name, partner_b_role,
+          couple_title, start_date, vow, theme, sign_a, sign_b, created_by_user_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+       RETURNING *`,
+      [
+        certNo,
+        partnerAUserId,
+        partnerAName,
+        partnerARole,
+        partnerBUserId,
+        partnerBName,
+        partnerBRole,
+        coupleTitle,
+        startDate,
+        vow,
+        theme,
+        signA,
+        signB,
+        user?.id || null,
+      ]
+    );
+
+    res.status(201).json({
+      ok: true,
+      couple: formatCoupleRow(rows[0]),
+    });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 커플 등록번호 또는 이름으로 진위 확인 조회
+app.get('/api/couples/verify', async (req, res) => {
+  if (!pool) return res.status(500).json({ error: 'DATABASE_URL not configured' });
+  const q = String(req.query.q || '').trim();
+  if (!q) return res.status(400).json({ error: '조회할 커플 등록번호(CPL-...) 또는 이름을 입력해 주세요.' });
+
+  try {
+    const { rows } = await pool.query(
+      `SELECT * FROM couple_certificates
+       WHERE status = 'active'
+         AND (cert_no ILIKE $1 OR partner_a_name ILIKE $1 OR partner_b_name ILIKE $1 OR couple_title ILIKE $1)
+       ORDER BY issued_at DESC
+       LIMIT 1`,
+      [`%${q}%`]
+    );
+    if (!rows[0]) {
+      return res.status(404).json({ valid: false, error: '일치하는 커플인증서를 찾을 수 없습니다.' });
+    }
+    res.json({
+      valid: true,
+      issuer: 'ATELIER J · ONEID 통합 행정복지센터장',
+      couple: formatCoupleRow(rows[0]),
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 커플 해지(결별 신고) 또는 총괄관리자 직권 말소
+app.delete('/api/couples/:id', async (req, res) => {
+  const user = await verifyOneIdUser(req);
+  if (!user) return res.status(401).json({ error: '결별(해지) 신고를 하려면 ONEID 로그인이 필요합니다.' });
+
+  const id = Number(req.params.id);
+  try {
+    const { rows } = await pool.query('SELECT * FROM couple_certificates WHERE id = $1', [id]);
+    const cert = rows[0];
+    if (!cert) return res.status(404).json({ error: '커플인증서를 찾을 수 없습니다.' });
+
+    const isOwner =
+      user.isAdmin ||
+      cert.created_by_user_id === user.id ||
+      cert.partner_a_user_id === user.id ||
+      cert.partner_b_user_id === user.id ||
+      cert.partner_a_name.toLowerCase() === user.nickname.toLowerCase() ||
+      cert.partner_b_name.toLowerCase() === user.nickname.toLowerCase();
+
+    if (!isOwner) {
+      return res.status(403).json({ error: '본인이 속한 커플인증서이거나 총괄관리자만 해지할 수 있습니다.' });
+    }
+
+    await pool.query('DELETE FROM couple_certificates WHERE id = $1', [id]);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 총괄관리자 전용: 훈장 수여 & 민증 말소
 app.post('/api/admin/citizens/:userId/badge', async (req, res) => {
   const user = await verifyOneIdUser(req);
   if (!user || !user.isAdmin) {
@@ -378,7 +615,7 @@ app.get('*', (_req, res) => {
 
 if (!process.env.VERCEL) {
   app.listen(PORT, () => {
-    console.log(`🪪 CITIZEN PASS listening on http://localhost:${PORT}`);
+    console.log(`🏛️ CITIZEN PASS Center listening on http://localhost:${PORT}`);
   });
 }
 
