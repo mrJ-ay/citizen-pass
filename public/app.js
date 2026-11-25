@@ -660,18 +660,18 @@ function renderCoupleCertificate(couple) {
 
       <div class="cert-signatures-row">
         <div class="cert-sign-slot">
-          <span>서약인 A: <strong>${escapeHtml(c.partnerAName)}</strong></span>
+          <span>신청인: <strong>${escapeHtml(c.partnerAName)}</strong></span>
           ${
             c.signA
-              ? `<img src="${c.signA}" alt="서명 A" />`
+              ? `<img src="${c.signA}" alt="신청인 서명" />`
               : `<span class="cert-sign-fallback">${escapeHtml(c.partnerAName)} (인)</span>`
           }
         </div>
         <div class="cert-sign-slot">
-          <span>서약인 B: <strong>${escapeHtml(c.partnerBName)}</strong></span>
+          <span>파트너: <strong>${escapeHtml(c.partnerBName)}</strong></span>
           ${
             c.signB
-              ? `<img src="${c.signB}" alt="서명 B" />`
+              ? `<img src="${c.signB}" alt="파트너 서명" />`
               : `<span class="cert-sign-fallback">${escapeHtml(c.partnerBName)} (인)</span>`
           }
         </div>
@@ -872,8 +872,8 @@ async function exportCoupleCertificatePng(c) {
   ctx.textAlign = 'left';
   ctx.fillStyle = '#cbd5e1';
   ctx.font = '18px Pretendard, sans-serif';
-  ctx.fillText(`서약인 A: ${c.partnerAName}   (서명/인)`, 110, 585);
-  ctx.fillText(`서약인 B: ${c.partnerBName}   (서명/인)`, 600, 585);
+  ctx.fillText(`신청인: ${c.partnerAName}   (서명/인)`, 110, 585);
+  ctx.fillText(`파트너: ${c.partnerBName}   (서명/인)`, 600, 585);
 
   // Footer & Official Stamp
   ctx.fillStyle = '#94a3b8';

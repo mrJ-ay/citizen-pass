@@ -159,23 +159,23 @@
           <form id="coupleIssueForm" class="modal-form gov-form">
             <div class="form-row-2">
               <label>
-                <span>신청인 성명 (갑 / Partner A) <em class="req">*</em></span>
+                <span>신청인 성명 (닉네임) <em class="req">*</em></span>
                 <input id="partnerANameInput" type="text" maxlength="24" placeholder="성명 또는 닉네임 입력" list="citizenNickList" required />
               </label>
               <label>
-                <span>관계 / 호칭 (갑)</span>
-                <input id="partnerARoleInput" type="text" maxlength="20" value="교제 당사자(갑)" placeholder="예: 남자친구 / 남편 / 사랑하는 사람" required />
+                <span>신청인 애칭 / 호칭</span>
+                <input id="partnerARoleInput" type="text" maxlength="20" value="사랑하는 사람" placeholder="예: 남자친구 / 남편 / 사랑하는 사람" required />
               </label>
             </div>
 
             <div class="form-row-2">
               <label>
-                <span>상대방 성명 (을 / Partner B) <em class="req">*</em></span>
+                <span>파트너 성명 (닉네임) <em class="req">*</em></span>
                 <input id="partnerBNameInput" type="text" maxlength="24" placeholder="성명 또는 닉네임 입력" list="citizenNickList" required />
               </label>
               <label>
-                <span>관계 / 호칭 (을)</span>
-                <input id="partnerBRoleInput" type="text" maxlength="20" value="교제 당사자(을)" placeholder="예: 여자친구 / 아내 / 소중한 사람" required />
+                <span>파트너 애칭 / 호칭</span>
+                <input id="partnerBRoleInput" type="text" maxlength="20" value="소중한 사람" placeholder="예: 여자친구 / 아내 / 소중한 사람" required />
               </label>
             </div>
             <datalist id="citizenNickList"></datalist>
@@ -186,7 +186,7 @@
                 <input id="coupleTitleInput" type="text" maxlength="32" value="공식 커플 관계 증명서" placeholder="예: 공식 커플 관계 증명서" required />
               </label>
               <label>
-                <span>교제 개시일 (기준일로부터 일수 자동산정) <em class="req">*</em></span>
+                <span>교제 개시일 (우리가 처음 만난 날) <em class="req">*</em></span>
                 <input id="coupleStartDateInput" type="date" required />
               </label>
             </div>
@@ -209,14 +209,14 @@
             <div class="sign-grid">
               <div class="sign-box">
                 <div class="sign-head">
-                  <span>✍️ 당사자(갑) 전자서명 또는 날인</span>
+                  <span>✍️ 신청인 자필 서명</span>
                   <button type="button" class="text-btn" id="clearSignABtn">서명 초기화</button>
                 </div>
                 <canvas id="signCanvasA" width="210" height="76" class="sign-canvas"></canvas>
               </div>
               <div class="sign-box">
                 <div class="sign-head">
-                  <span>✍️ 당사자(을) 전자서명 또는 날인</span>
+                  <span>✍️ 파트너 자필 서명</span>
                   <button type="button" class="text-btn" id="clearSignBBtn">서명 초기화</button>
                 </div>
                 <canvas id="signCanvasB" width="210" height="76" class="sign-canvas"></canvas>
@@ -342,6 +342,6 @@
     </div>
   </div>
 
-  <script type="module" src="/app.js?v=5"></script>
+  <script type="module" src="/app.js?v=6"></script>
 </body>
 </html>
